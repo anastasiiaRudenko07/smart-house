@@ -1,0 +1,89 @@
+class SmartHouse {
+    properties:
+        #name: String
+        #devicesList: Map<Number, Device>
+    behavior:
+        +constructor(name: String): void
+        
+        +get name(): String
+        +set name(name: String): void
+
+        -validateDeviceByName(name: String): Bollean      
+        -generateId(): Number
+        
+        +addDevice(device: Device): void
+        +get devicesList(): String[]
+        +getIdOfDevice(device: Device): Number
+        +getDeviceById(id: Number): device
+        +deleteDeviceById(id: Number): void
+        +deleteAllDevices(): void
+        
+        +onAllDevices(): void
+        +offAllDevices(): void
+ }
+ 
+ class Device {
+    properties:
+        #state: Boolean
+        #name: String
+        #temperature: Number
+    behavior:
+        +constructor(name: String): void
+        +on(): void
+        +off(): void
+        +get state(): Boolean
+        +get name(): String
+        +get temperature: Number
+ }
+ 
+ class Iron extends Device {
+    properties:
+        #temperatureMin: Number
+        #temperatureMax: Number
+        #steamerOn: Boolean
+        #waterLevel: Number
+        #waterLevelMax: Number
+    behavior:
+        +constructor(name: String, temperature: Number, steamerOn: Bollean): void
+ 
+        +increaseTemperature():  void
+        +decreaseTemperature(): void
+ 
+        +handleSteamer(): void
+        +get steamerOn(): Boolean
+ 
+        +get waterLevel(): Number
+        +addWater(): void
+ }
+
+ class Oven extends Device {
+    properties:
+        #temperatureMin: Number
+        #temperatureMax: Number
+        #timer: Number // 1-300
+        #timerMin: Number
+        #timerMax: Number
+        #lampOn: Boolean
+        #modes: [String] // "grill", "defrosting", "standart"
+        #currentMode: Number
+        #isReady: Boolean
+    behavior:
+        +constructor(name: String): void
+        +off(): void
+
+        +set temperature(temperature: Number): void
+ 
+        +get timer(): void
+        +set timer(time: Number): Number
+ 
+        +handlelamp(): void
+        +get lampOn(): Boolean
+ 
+        +get currentMode(): String
+        +nextMode(): void
+        +previousMode(): void
+ 
+        +run(): void 
+        +runMode(): void
+ }
+ 
