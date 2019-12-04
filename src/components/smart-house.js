@@ -24,15 +24,20 @@ class SmartHouse {
     //   });
     //   return foundDevice === undefined;
     // }
+    
+    _generateId() {
+      return Math.floor(Math.random() * 100000000 + 1);
+    }
+    
     addDevice(device) {
       if (device instanceof Device /*&& this._validateDeviceByName(device.name)*/) {
-        const id = Math.floor(Math.random() * 100000000 + 1);
+        const id = this._generateId();
         this._devicesList.set(id, device);
       }
     }
     get devicesList() {
       const list = [];
-
+      
       for (let item of this._devicesList.values()) {
         list.push(item.name);
       }
@@ -55,6 +60,7 @@ class SmartHouse {
     deleteAllDevices() {
       this._devicesList.clear();
     }
+    
     onAllDevices() {
       this._devicesList.forEach((value) => {
         value.on();

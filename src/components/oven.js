@@ -3,10 +3,14 @@ import Device from './device';
 class Oven extends Device {
     constructor(name) {
       super(name);
-      this._timer = 0; // 1-300
+      this._temperatureMin = 0; /*degrees celsius*/
+      this._temperatureMax = 250;
+      this._timer = 0; /*in milliseconds */
+      this._timerMin = 1;
+      this._timerMax = 7200000; /*2 hours*/
       this._lampOn = false;
       this._modes = ["standart", "grill", "defrosting"];
-      this._currentMode = 0;
+      this._currentMode = "standart";
       this._isReady = false;
     }
   
@@ -16,10 +20,8 @@ class Oven extends Device {
     }
   
     set temperature(temperature) {
-      if (temperature >= 1 && temperature <= 250) {
-        setTimeout(() => {
-          this._temperature = temperature;
-        }, 1000);
+      if (temperature > this._temperatureMin && temperature <= this._temperatureMax) {
+        this._temperature = temperature;
       }
     }
   
@@ -27,18 +29,13 @@ class Oven extends Device {
       return this._timer;
     }
     set timer(time) {
-      if (time >= 1 && time <= 30000) {
+      if (time >= this._timerMin && time <= this._timerMax) {
         this._timer = time;
       }
     }
   
     handleLamp() {
-      if (this._lampOn) {
-        this._lampOn = false;
-      } else {
-        this._lampOn = true;
-      }
-      // this._lampOn = !this._lampOn;
+      this._lampOn = !this._lampOn;
     }
     get lampOn() {
       return this._lampOn;
@@ -48,47 +45,63 @@ class Oven extends Device {
       return this._modes[this._currentMode];
     }
     nextMode() {
-      this._currentMode++;
-      if (this._currentMode == this._modes.length) {
-        this._currentMode = 0;
+      const indexCurrentMode = this._modes.indexOf(this._currentMode);
+
+      if (indexCurrentMode  === this._modes.length - 1) {
+        this._currentMode = this._modes[0];
+      } else {
+        this._currentMode = this._modes[indexCurrentMode + 1];        
       }
+      // this._currentMode = this._modes[indexCurrentMode + 1];
+      // this._currentMode++;
+      // if (this._currentMode === this._modes.length) {
+      //   this._currentMode = 0;
+      // }
     }
     previousMode() {
-      if (this._currentMode == 0) {
-        this._currentMode = this._modes.length;
+      const indexCurrentMode = this._modes.indexOf(this._currentMode);
+
+      if (indexCurrentMode  === 0) {
+        this._currentMode = this._modes[this._modes.length - 1];
+      } else {
+        this._currentMode = this._modes[indexCurrentMode - 1]; 
       }
-      this._currentMode--;
+      // if (this._currentMode == 0) {
+      //   this._currentMode = this._modes.length;
+      // }
+      // this._currentMode--;
     }
     run() {
       if(this._temperature && this._timer) {
-        return new Promise((resolve) => {
+        new Promise((resolve) => {
           setTimeout(() => {
-            this._isReady = true;
             resolve();
           }, this._timer);
+        }).then(() => {
+          this._isReady = true;
         });
       }
     }
     runMode() {
       switch(this._currentMode) {
-        case 0: 
+        case "standart": 
           this._temperature = 180;
-          this._timer = 30;
+          this._timer = 1800000; /*30 min*/
           this.run();
           break;
-        case 1: 
+        case "grill": 
           this._temperature = 200;
-          this._timer = 50;
+          this._timer = 2400000; /*40 min*/
           this.run();
           break;
-        case 2: 
+        case "defrosting": 
           this._temperature = 30;
-          this._timer = 30;
+          this._timer = 1800000; /*30 min*/
           this.run();
           break;
         default:
           this._temperature = 150;
-          this._timer = 10;
+          this._timer = 600000; /*10 min*/
           this.run();
           break;
       }

@@ -9,6 +9,8 @@ class SmartHouse {
         +set name(name: String): void
 
         -validateDeviceByName(name: String): Bollean      
+        -generateId(): Number
+        
         +addDevice(device: Device): void
         +get devicesList(): String[]
         +getIdOfDevice(device: Device): Number
@@ -36,8 +38,11 @@ class SmartHouse {
  
  class Iron extends Device {
     properties:
+        #temperatureMin: Number
+        #temperatureMax: Number
         #steamerOn: Boolean
-        #waterLevel: Number // 0, 1, 2
+        #waterLevel: Number
+        #waterLevelMax: Number
     behavior:
         +constructor(name: String, temperature: Number, steamerOn: Bollean): void
  
@@ -53,7 +58,11 @@ class SmartHouse {
 
  class Oven extends Device {
     properties:
+        #temperatureMin: Number
+        #temperatureMax: Number
         #timer: Number // 1-300
+        #timerMin: Number
+        #timerMax: Number
         #lampOn: Boolean
         #modes: [String] // "grill", "defrosting", "standart"
         #currentMode: Number
@@ -61,6 +70,7 @@ class SmartHouse {
     behavior:
         +constructor(name: String): void
         +off(): void
+
         +set temperature(temperature: Number): void
  
         +get timer(): void
